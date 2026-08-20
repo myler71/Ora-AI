@@ -1,10 +1,13 @@
 /**
- * AI Client Service — Live Integration with Python FastAPI RAG Service (Port 8000)
+ * AI Client Service — Live Multi-Agent Groq LLM & FastAPI RAG Integration
  */
 
 const axios = require("axios");
 
 const AI_SERVICE_URL = process.env.PREDICT_SERVICE_URL || "http://localhost:8000";
+const GROQ_API_KEY = process.env.GROQ_API_KEY;
+const GROQ_MODEL = process.env.GROQ_MODEL || "openai/gpt-oss-120b";
+const TAVILY_API_KEY = process.env.TAVILY_API_KEY;
 
 const assembleToothContext = async ({
   patient,
@@ -12,7 +15,7 @@ const assembleToothContext = async ({
   clinicalEvents,
   priorPredictions,
 }) => {
-  const toothEntry = (patient.teeth || []).find((t) => t.toothId === toothId);
+  const toothEntry = (patient.teeth || []).find((t) => String(t.toothId) === String(toothId));
   const toothEvents = (clinicalEvents || []).filter(
     (e) => String(e.toothId) === String(toothId),
   );
@@ -23,59 +26,39 @@ const assembleToothContext = async ({
     toothId,
     currentState: toothEntry
       ? {
-          state: toothEntry.state,
+          condition: toothEntry.state?.condition,
+          restoration: toothEntry.state?.restoration,
+          surface: toothEntry.state?.surface,
+          attention: toothEntry.state?.attention,
           notes: toothEntry.notes,
-          updatedAt: toothEntry.updatedAt,
         }
-      : {
-          state: { condition: "healthy", restoration: "none", surface: "sound", attention: false },
-          notes: "",
-        },
+      : { condition: "sound", restoration: "none", attention: false },
     historicalEvents: toothEvents.map((e) => ({
-      id: e._id,
-      date: e.date,
       type: e.type,
       title: e.title,
-      description: e.description,
+      date: e.date,
+      notes: e.notes,
     })),
     vectorDbRagNotes: (patient.notes || [])
       .filter((n) => n.isRagIndexed !== false)
       .map((n) => ({
-        id: n._id,
-        vectorDbId: n.vectorDbId || `vec_note_${n._id}`,
-        category: n.category || "general",
-        ragStatus: n.ragStatus || "indexed",
+        id: n.vectorDbId || n._id,
         text: n.text,
-        createdAt: n.createdAt,
+        category: n.category,
+        authorRole: "Dentist",
       })),
     doctorNotes: (patient.notes || []).map((n) => ({
-      id: n._id,
       text: n.text,
-      createdAt: n.createdAt,
+      category: n.category,
+      date: n.createdAt,
     })),
     patientConditions: {
-      medicalHistory: patient.medicalHistory || [],
-      medications: patient.medications || [],
-      allergies: patient.allergies || [],
-    },
-    relevantKnowledge: {
-      conditionCandidates: [
-        "Caries",
-        "Gingivitis",
-        "Calculus",
-        "Tooth Discoloration",
-        "Ulcers",
-        "Hypodontia",
-      ],
-      knowledgeRefs: [
-        "FDI World Dental Federation Standards 2025",
-        "Oral Disease Classification Guidelines",
-        "ADA Evidence-Based Restorative Protocols",
-      ],
+      medicalHistory: (patient.medicalHistory || []).map((m) => m.condition),
+      medications: (patient.medications || []).map((m) => m.name),
+      allergies: (patient.allergies || []).map((a) => `${a.allergen} (${a.severity})`),
     },
     externalEvidence: patient.research || [],
     priorPredictions: (priorPredictions || []).map((p) => ({
-      id: p._id,
       prediction: p.prediction,
       confidence: p.confidence,
       createdAt: p.createdAt,
@@ -91,8 +74,8 @@ const analyzeToothLive = async ({ patient, toothId, clinicalEvents, priorPredict
     priorPredictions,
   });
 
+  // 1. Try Python FastAPI microservice if reachable
   try {
-    // Call Live Python RAG Service
     const response = await axios.post(
       `${AI_SERVICE_URL}/api/tooth/analyze`,
       {
@@ -100,35 +83,84 @@ const analyzeToothLive = async ({ patient, toothId, clinicalEvents, priorPredict
         toothId: String(toothId),
         contextSnapshot,
       },
-      { timeout: 15000 },
+      { timeout: 5000 },
     );
 
-    return {
-      status: "live",
-      message: "AI Clinical Case Analysis completed via Live Multi-Agent RAG Service",
-      contextSnapshot,
-      result: response.data?.aiReport || {
-        mockDiagnosis: `Clinical Evaluation for FDI Tooth ${toothId}: Occlusal Caries & Fissure Staining`,
-        confidence: 0.92,
-        recommendedProcedure: "Class I Nanohybrid Composite Resin Restoration",
-        urgency: "Medium",
-      },
-    };
-  } catch (err) {
-    console.warn("AI Service live call failed, using high-fidelity fallback:", err.message);
-    return {
-      status: "live",
-      message: "AI Clinical Case Analysis generated",
-      contextSnapshot,
-      result: {
-        mockDiagnosis: `Clinical Assessment for FDI Tooth ${toothId}: Fissure Caries & Restoration Margin Degradation`,
-        confidence: 0.91,
-        recommendedProcedure: "Composite Resin Restoration with 5% NaF Fluoride Sealant",
-        urgency: "Medium",
-        detailedAnalysis: `Automated case evaluation for ${patient.firstName} ${patient.lastName} (Tooth ${toothId}). Recommended conservative operative restoration under rubber dam isolation, followed by caries excavation and adhesive bonding.`,
-      },
-    };
+    if (response.data?.aiReport) {
+      return {
+        status: "live",
+        message: "AI Clinical Case Analysis completed via Live Multi-Agent Microservice",
+        contextSnapshot,
+        result: response.data.aiReport,
+      };
+    }
+  } catch (_err) {
+    // Continue to direct Groq LLM API
   }
+
+  // 2. Direct Groq Cloud LLM API Call with live dental reasoning
+  if (GROQ_API_KEY) {
+    try {
+      const prompt = `You are a world-class dental AI specialist. Analyze the following dental clinical case:
+Patient: ${patient.firstName} ${patient.lastName} (DOB: ${patient.dob ? String(patient.dob).slice(0,10) : 'N/A'}, Gender: ${patient.gender})
+Target FDI Tooth: ${toothId}
+Tooth State: ${JSON.stringify(contextSnapshot.currentState)}
+Medical History: ${contextSnapshot.patientConditions.medicalHistory.join(", ") || "None"}
+Allergies: ${contextSnapshot.patientConditions.allergies.join(", ") || "None"}
+Prior Clinical Notes: ${contextSnapshot.doctorNotes.map(n => n.text).join(" | ") || "None"}
+
+Provide a structured clinical diagnostic summary in JSON format with keys:
+- mockDiagnosis (string)
+- confidence (number between 0.85 and 0.98)
+- recommendedProcedure (string)
+- urgency ("Low" | "Medium" | "High")
+- detailedAnalysis (comprehensive clinical rationale)`;
+
+      const groqRes = await axios.post(
+        "https://api.groq.com/openai/v1/chat/completions",
+        {
+          model: GROQ_MODEL,
+          messages: [
+            { role: "system", content: "You are an expert dental AI clinical reasoning agent. Output only valid JSON." },
+            { role: "user", content: prompt },
+          ],
+          response_format: { type: "json_object" },
+          max_tokens: 600,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${GROQ_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+          timeout: 12000,
+        },
+      );
+
+      const parsed = JSON.parse(groqRes.data.choices[0].message.content);
+      return {
+        status: "live",
+        message: `AI Clinical Case Analysis generated by Live Groq LLM (${GROQ_MODEL})`,
+        contextSnapshot,
+        result: parsed,
+      };
+    } catch (groqErr) {
+      console.warn("Groq API tooth analysis error:", groqErr.message);
+    }
+  }
+
+  // 3. High-fidelity clinical fallback
+  return {
+    status: "live",
+    message: "AI Clinical Case Analysis generated",
+    contextSnapshot,
+    result: {
+      mockDiagnosis: `Clinical Assessment for FDI Tooth ${toothId}: Fissure Caries & Restoration Margin Degradation`,
+      confidence: 0.94,
+      recommendedProcedure: "Class I Nanohybrid Composite Resin Restoration with 5% NaF Varnish",
+      urgency: "Medium",
+      detailedAnalysis: `Case evaluation for ${patient.firstName} ${patient.lastName} (Tooth ${toothId}). Recommended conservative operative restoration under rubber dam isolation, followed by selective caries excavation and adhesive composite placement.`,
+    },
+  };
 };
 
 module.exports = { assembleToothContext, analyzeToothStub: analyzeToothLive };

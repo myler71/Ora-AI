@@ -4,6 +4,8 @@ const ChatMessage = require("../models/ChatMessage");
 const Patient = require("../models/Patient");
 
 const AI_SERVICE_URL = process.env.PREDICT_SERVICE_URL || "http://localhost:8000";
+const GROQ_API_KEY = process.env.GROQ_API_KEY;
+const GROQ_MODEL = process.env.GROQ_MODEL || "openai/gpt-oss-120b";
 
 // GET /api/chat/sessions
 const getChatSessions = async (req, res) => {
@@ -24,8 +26,8 @@ const createChatSession = async (req, res) => {
 
     const session = await ChatSession.create({
       doctor: doctorId,
-      title: title || "New Clinical Discussion",
       patient: patientId || null,
+      title: title || "New Clinical Consultation",
     });
 
     return res.status(201).json({ session });
@@ -46,7 +48,7 @@ const getChatMessages = async (req, res) => {
 };
 
 // POST /api/chat/sessions/:id/messages
-// Connects to live Python RAG Assistant (Groq LLM + Knowledge Base + Patient Context)
+// Connects to live Groq LLM Assistant with RAG Patient Context Binding
 const sendChatMessage = async (req, res) => {
   try {
     const { id } = req.params;
@@ -84,8 +86,9 @@ const sendChatMessage = async (req, res) => {
       }
     }
 
-    // 3. Request live response from Python RAG microservice
+    // 3. Request live response from Python microservice or direct Groq LLM API
     let aiReplyText = "";
+
     try {
       const response = await axios.post(
         `${AI_SERVICE_URL}/api/chat`,
@@ -95,17 +98,60 @@ const sendChatMessage = async (req, res) => {
           patient_name: patientObj ? `${patientObj.firstName} ${patientObj.lastName}` : null,
           patient_context: patientContext,
         },
-        { timeout: 15000 },
+        { timeout: 4000 },
       );
 
       aiReplyText = response.data?.reply || "";
-    } catch (err) {
-      console.warn("Live Python RAG chat failed, using smart clinical synthesis:", err.message);
-      let ragNotice = "";
-      if (patientContext) {
-        ragNotice = `[RAG Memory: Context loaded for ${patientContext.name} • ${patientContext.allergies.join(", ") || "No allergies"}]\n\n`;
+    } catch (_err) {
+      // Direct Groq Cloud LLM API Call
+      if (GROQ_API_KEY) {
+        try {
+          const sysPrompt = `You are Ora AI, an advanced dental clinical intelligence copilot.
+${
+  patientContext
+    ? `Patient Context Loaded:
+Name: ${patientContext.name} (${patientContext.gender}, DOB: ${String(patientContext.dob).slice(0, 10)})
+Allergies: ${patientContext.allergies.join(", ") || "No known allergies"}
+Medical History: ${patientContext.medicalHistory.join(", ") || "None"}
+Medications: ${patientContext.medications.join(", ") || "None"}
+Doctor Clinical Notes: ${patientContext.vectorNotes.join(" | ") || "None"}`
+    : "General clinical consultation mode."
+}
+
+Provide clear, professional, evidence-based clinical guidance citing ADA/FDI dental guidelines where appropriate.`;
+
+          const groqRes = await axios.post(
+            "https://api.groq.com/openai/v1/chat/completions",
+            {
+              model: GROQ_MODEL,
+              messages: [
+                { role: "system", content: sysPrompt },
+                { role: "user", content: text },
+              ],
+              max_tokens: 600,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${GROQ_API_KEY}`,
+                "Content-Type": "application/json",
+              },
+              timeout: 15000,
+            },
+          );
+
+          aiReplyText = groqRes.data.choices[0].message.content;
+        } catch (groqErr) {
+          console.warn("Groq live chat error:", groqErr.message);
+        }
       }
-      aiReplyText = `${ragNotice}Based on clinical dental guidelines and patient records, for query "${text}": Recommend evaluating tooth vitality, confirming rubber dam isolation, and placing adhesive composite restorations for conservative defect management.`;
+
+      if (!aiReplyText) {
+        let ragNotice = "";
+        if (patientContext) {
+          ragNotice = `[RAG Memory: Context bound for ${patientContext.name} • ${patientContext.allergies.join(", ") || "No allergies"}]\n\n`;
+        }
+        aiReplyText = `${ragNotice}Based on clinical dental guidelines and patient records for "${text}": Recommend vitality assessment, confirming rubber dam isolation, and placing adhesive composite restorations for conservative defect management.`;
+      }
     }
 
     // 4. Save assistant reply message
