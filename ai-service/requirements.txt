@@ -1,0 +1,33 @@
+# Dental Clinical Intelligence AI Stack — runtime dependencies
+fastapi
+uvicorn[standard]
+pydantic>=2
+pydantic-settings
+python-multipart
+
+# Vision Inference
+tensorflow-cpu>=2.15.0
+pillow>=10.0.0
+
+# Orchestration + RAG
+langgraph>=1.0
+langchain-core>=1.0
+langchain>=1.0
+langchain-groq
+langchain-text-splitters
+
+# LLM + embeddings
+groq
+sentence-transformers
+numpy
+
+# Data
+SQLAlchemy>=2.0
+psycopg2-binary
+
+# Web research
+tavily-python
+
+# Testing
+pytest
+pytest-asyncio

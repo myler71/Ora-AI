@@ -1,0 +1,99 @@
+{
+  "final_output": {
+    "report": {
+      "case_overview": "Sara Hassan, 41\u2011year\u2011old female with well\u2011controlled type 2 diabetes and hypertension, presents for routine cleaning and examination. She has a severe penicillin allergy and mild latex sensitivity. Dental chart shows a carious lesion on tooth 27, an intact amalgam restoration on tooth 36 placed 2024\u201106\u201110, and a recent extraction of tooth 47 (2023\u201108\u201115). She reports cold sensitivity on the lower right side.",
+      "documented_findings": [
+        "Patient: Sara Hassan, DOB 1985\u201104\u201112, female",
+        "Medical history: type 2 diabetes (well controlled), hypertension",
+        "Allergies: Penicillin (severe), Latex (mild)",
+        "Medications: Metformin 850\u202fmg twice daily, Lisinopril 10\u202fmg once daily",
+        "Teeth present: 16, 17, 18, 26, 27 (carious), 36 (amalgam restoration), 46",
+        "Tooth 47 extracted on 2023\u201108\u201115 due to fracture",
+        "Amalgam restoration on tooth 36 placed 2024\u201106\u201110 and noted intact",
+        "Patient reports cold sensitivity on lower right region (includes tooth 36)",
+        "Scheduled appointment for cleaning and examination on 2026\u201108\u201129"
+      ],
+      "clinical_context": [
+        "Routine preventive visit with cleaning and examination",
+        "Need to assess cold sensitivity and carious lesion on tooth 27",
+        "Consideration of latex\u2011free protocol due to mild latex sensitivity",
+        "Potential need for endodontic evaluation if pulpitis is present"
+      ],
+      "relevant_dental_history": [
+        "Well\u2011controlled type 2 diabetes (HbA1c reported as controlled, exact value not provided)",
+        "Hypertension managed with Lisinopril",
+        "No anticoagulant or bisphosphonate therapy reported",
+        "Recent amalgam placement on tooth 36 (intact)",
+        "Extraction of tooth 47 due to fracture"
+      ],
+      "evidence_summary": [
+        "Cold sensitivity may indicate reversible or irreversible pulpitis; pulp testing and radiographic assessment are required (evidence\u00a0[3],[5])",
+        "Penicillin allergy requires alternative antibiotic prophylaxis if indicated (evidence\u00a0[1])",
+        "Latex allergy mandates use of latex\u2011free gloves and materials (clinical best practice)",
+        "Diabetes, even when controlled, can affect wound healing; monitor post\u2011operative healing (general medical consideration)",
+        "Antihypertensive Lisinopril does not usually require alteration for dental procedures, but blood pressure should be checked (evidence\u00a0[4])",
+        "Bisphosphonate or anticoagulant use increases surgical risk; none reported for this patient (evidence\u00a0[1],[4])"
+      ],
+      "medication_considerations": [
+        "Metformin and Lisinopril have no known interaction; continue as prescribed",
+        "Avoid penicillin\u2011type antibiotics; consider clindamycin if prophylaxis is needed",
+        "ACE inhibitors may potentiate hypotensive response to epinephrine; use minimal epinephrine concentration and monitor blood pressure",
+        "Assess renal function before prescribing NSAIDs or adjusting Metformin dose",
+        "Monitor blood glucose peri\u2011operatively due to diabetes"
+      ],
+      "materials_and_supplies": [
+        "Composite resin (light\u2011cure) \u2013 for Class\u202fII restoration of tooth 27",
+        "Dental bonding agent \u2013 compatible with composite",
+        "Matrix band and retainer \u2013 to shape restoration",
+        "Rubber dam kit \u2013 latex\u2011free for isolation",
+        "Alternative material: glass ionomer cement if composite unavailable"
+      ],
+      "availability": [
+        "Inventory status for composite resin, bonding agent, matrix band, and rubber dam kit not provided \u2013 availability unknown"
+      ],
+      "agent_disagreements": [],
+      "uncertainties": [
+        "Exact etiology of cold sensitivity (pulpal vs periodontal)",
+        "Whether the amalgam restoration on tooth 36 is the source of sensitivity",
+        "Current periodontal health (probing depths, bleeding)",
+        "Current HbA1c value and date of measurement",
+        "Most recent blood pressure reading",
+        "Renal function (eGFR)"
+      ],
+      "missing_information": [
+        "Current HbA1c value and date",
+        "Latest blood pressure reading",
+        "Results of pulp vitality testing for teeth 27 and 36",
+        "Periapical radiographs of lower right quadrant (teeth 27, 36, 46)",
+        "Periodontal charting (probing depths, BOP)",
+        "Details of any recent analgesic or antibiotic use",
+        "Confirmation of any additional systemic medications, supplements, or OTC drugs",
+        "Specific latex\u2011free material requirements for upcoming procedures"
+      ],
+      "questions_for_dentist": [
+        "Has pulp vitality testing been performed on tooth 27 and tooth 36?",
+        "Are recent periapical radiographs available for the lower right quadrant?",
+        "What is the current HbA1c value and most recent blood pressure reading?",
+        "Is there a treatment plan for the carious lesion on tooth 27 (composite vs alternative)?",
+        "Will latex\u2011free gloves and isolation materials be used for the cleaning and any restorative work?",
+        "Is antibiotic prophylaxis indicated for any planned invasive procedure given the penicillin allergy?",
+        "What concentration of epinephrine (if any) is planned for local anesthesia?",
+        "Are there any OTC medications, supplements, or herbal products the patient is taking?"
+      ],
+      "evidence_citations": [
+        "Medication Considerations in Dental Care | internal | \"2024\"",
+        "Periodontal Disease \u2014 Staging and Management | internal | \"2024\"",
+        "Endodontic Treatment of Irreversible Pulpitis | internal | \"2023\""
+      ],
+      "draft_conclusion": "The patient presents for routine care but reports cold sensitivity in the lower right quadrant, warranting pulp vitality testing and periapical radiographs of teeth 27, 36, and 46. The carious lesion on tooth 27 should be restored, preferably with composite resin using latex\u2011free isolation; a glass ionomer may be considered if composite is unavailable. The existing amalgam on tooth 36 appears intact, but its role in the sensitivity should be evaluated. No prophylactic antibiotics are indicated unless invasive work is planned; if needed, clindamycin is a suitable alternative to penicillin. Use latex\u2011free gloves and instruments, and limit epinephrine concentration due to ACE\u2011inhibitor therapy. Verify current HbA1c, blood pressure, and renal function before proceeding, and obtain full periodontal charting to guide maintenance intervals. All decisions should be confirmed by the treating dentist.",
+      "_safety": {
+        "valid": true,
+        "issues": [],
+        "disclaimer": "This output is decision-support material for a licensed dentist. It does not constitute a diagnosis or prescription. The treating dentist makes all final clinical decisions."
+      }
+    },
+    "review_action": "approve",
+    "doctor_note": "demo",
+    "disclaimer": "This output is decision-support material for a licensed dentist. It does not constitute a diagnosis or prescription. The treating dentist makes all final clinical decisions."
+  }
+}

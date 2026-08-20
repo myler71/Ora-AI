@@ -1,0 +1,89 @@
+/* Custom animations and utilities for Ora AI */
+
+@layer utilities {
+  /* Glassmorphism utilities */
+  .glass {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .glass-strong {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    background: linear-gradient(135deg, #3fa9f5 0%, #1f6feb 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Custom shadows */
+  .shadow-soft {
+    box-shadow: 0 4px 20px rgba(63, 169, 245, 0.1);
+  }
+
+  .shadow-glow {
+    box-shadow: 0 0 40px rgba(63, 169, 245, 0.2);
+  }
+}
+
+/* Custom animations */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+/* Improved focus states */
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid #3fa9f5;
+  outline-offset: 2px;
+}
+
+/* Smooth transitions for all interactive elements */
+a,
+button {
+  transition: all 0.2s ease-in-out;
+}

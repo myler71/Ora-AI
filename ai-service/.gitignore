@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Local database + state
+*.db
+*.sqlite3
+dental_ai.db
+.pgdata/
+
+# Secrets
+.env
+
+# Test / build
+.pytest_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# IDE
+.idea/
+.vscode/
+.DS_Store

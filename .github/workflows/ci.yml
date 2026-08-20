@@ -1,0 +1,80 @@
+name: CI / Build Verification
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  frontend-build:
+    name: Frontend Build & Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: front/package-lock.json
+
+      - name: Install Frontend Dependencies
+        run: |
+          cd front
+          npm ci
+
+      - name: Build Frontend (Vite)
+        run: |
+          cd front
+          npm run build
+
+  backend-check:
+    name: Backend Syntax & Module Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: back/package-lock.json
+
+      - name: Install Backend Dependencies
+        run: |
+          cd back
+          npm ci
+
+      - name: Verify Backend Entrypoint
+        run: |
+          cd back
+          node -e "const { app } = require('./src/app'); if (!app) process.exit(1);"
+
+  ai-service-check:
+    name: AI Service Test Suite
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: ai-service/requirements.txt
+
+      - name: Install Python Dependencies
+        run: |
+          cd ai-service
+          pip install -r requirements.txt
+
+      - name: Run AI Tests
+        run: |
+          cd ai-service
+          pytest -v tests/

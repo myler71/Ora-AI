@@ -1,0 +1,15 @@
+# Dental Clinical Intelligence Runtime Dependencies
+langchain>=1.0.0
+langchain-core>=1.0.0
+langchain-groq>=1.0.0
+langchain-text-splitters>=1.0.0
+langgraph>=1.0.0
+groq
+sentence-transformers
+numpy
+sqlalchemy>=2.0.0
+pydantic>=2.0.0
+pydantic-settings
+networkx
+tavily-python
+python-dotenv

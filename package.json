@@ -1,0 +1,29 @@
+{
+  "name": "ora-ai-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Ora AI — Clinical Dental Workspace & Diagnostic AI System",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:back\" \"npm run dev:front\"",
+    "dev:front": "cd front && npm run dev",
+    "dev:back": "cd back && npm run dev",
+    "dev:ai": "cd ai-service && uvicorn api:app --reload --port 8000",
+    "build": "cd front && npm run build",
+    "build:front": "cd front && npm run build",
+    "seed:clinical": "cd back && npm run seed:clinical",
+    "test:ai": "cd ai-service && pytest"
+  },
+  "keywords": [
+    "dental-ai",
+    "react",
+    "express",
+    "fastapi",
+    "rag",
+    "langgraph",
+    "efficientnet",
+    "odontogram",
+    "clinical-workspace"
+  ],
+  "author": "Mohamed Ibrahim Amin (21511760)",
+  "license": "MIT"
+}
