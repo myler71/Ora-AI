@@ -1,7 +1,7 @@
 # Ora AI — Complete Vercel Production Deployment Plan
 
 **Project:** Ora AI Clinical Dental Workspace & Diagnostic System  
-**Author:** Mohamed Ibrahim Amin (21511760)  
+**Author:** Marwan Ammar (Myler71)  
 **Repository:** [https://github.com/myler71/Ora-AI.git](https://github.com/myler71/Ora-AI.git)  
 **Target Platform:** **Vercel** (Frontend + Serverless API) + Cloud Backing Services  
 

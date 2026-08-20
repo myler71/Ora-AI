@@ -377,9 +377,8 @@ Ora AI is natively engineered for **Vercel** deployment with dedicated `vercel.j
 
 ## 👨‍💻 Author & Academic Credentials
 
-- **Project Lead & Author:** Mohamed Ibrahim Amin
-- **Student ID:** 21511760
-- **Academic Project:** Ora AI — Dental Health Analysis & Clinical EHR System
+- **Project Lead & Author:** Marwan Ammar ([@myler71](https://github.com/myler71))
+- **Project:** Ora AI — Dental Health Analysis & Clinical EHR System
 - **Repository:** [https://github.com/myler71/Ora-AI.git](https://github.com/myler71/Ora-AI.git)
 - **License:** [MIT License](LICENSE)
 
