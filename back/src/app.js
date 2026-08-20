@@ -4,6 +4,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 dotenv.config();
 
+const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const predictRoutes = require("./routes/predictRoutes");
@@ -20,6 +21,19 @@ app.use(
   })
 );
 app.use(express.json());
+
+// Ensure MongoDB Atlas is connected before routing requests
+app.use(async (req, res, next) => {
+  if (process.env.MONGO_URI) {
+    try {
+      await connectDB();
+    } catch (err) {
+      console.error("MongoDB connection error in request middleware:", err);
+    }
+  }
+  next();
+});
+
 app.use("/api", authRoutes);
 app.use("/api", userRoutes);
 app.use("/api", predictRoutes);

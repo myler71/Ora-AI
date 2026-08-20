@@ -14,19 +14,20 @@ const protect = async (req, res, next) => {
     const token = readTokenFromHeader(req);
 
     if (!token) {
-      return res.status(401).json({ message: "Unauthorized" });
+      return res.status(401).json({ message: "Unauthorized: No token provided" });
     }
     const decoded = verifyToken(token);
     const user = await User.findOne({ _id: decoded.userId, isDeleted: false });
 
     if (!user) {
-      return res.status(401).json({ message: "Unauthorized" });
+      return res.status(401).json({ message: "Unauthorized: User not found" });
     }
 
     req.user = user;
     return next();
-  } catch (_error) {
-    return res.status(401).json({ message: "Invalid or expired token" });
+  } catch (error) {
+    console.error("Auth protect middleware error:", error.message);
+    return res.status(401).json({ message: "Invalid or expired token", error: error.message });
   }
 };
 
@@ -43,7 +44,7 @@ const optionalProtect = async (req, res, next) => {
     }
     req.user = user;
     return next();
-  } catch (_error) {
+  } catch (error) {
     return next();
   }
 };
