@@ -34,14 +34,10 @@ axiosInstance.interceptors.request.use((config) => {
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (
-      error?.response?.status === 401 &&
-      error?.response?.data?.message === "Invalid or expired token"
-    ) {
+    if (error?.response?.status === 401) {
       localStorage.removeItem("accessToken");
-      window.location.reload();
+      window.dispatchEvent(new Event("auth-changed"));
     }
-
     return Promise.reject(error);
   },
 );

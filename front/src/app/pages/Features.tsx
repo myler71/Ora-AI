@@ -150,18 +150,14 @@ export default function Features() {
               Test our AI scan engine or launch the doctor command center directly in your browser.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <Link to="/ai-tool">
-                <Button variant="glass" size="lg" className="bg-blue-600 text-white hover:bg-blue-700 border-none font-bold">
-                  <Sparkles className="w-5 h-5" />
-                  Try Free AI Scan
-                </Button>
-              </Link>
-              <Link to="/dashboard">
-                <Button variant="outline" size="lg" className="bg-white text-slate-900 hover:bg-slate-100 font-bold">
-                  <Grid className="w-5 h-5" />
-                  Launch Doctor Command Center
-                </Button>
-              </Link>
+              <Button to="/ai-tool" variant="glass" size="lg" className="bg-blue-600 text-white hover:bg-blue-700 border-none font-bold">
+                <Sparkles className="w-5 h-5" />
+                Try Free AI Scan
+              </Button>
+              <Button to="/dashboard" variant="outline" size="lg" className="bg-white text-slate-900 hover:bg-slate-100 font-bold">
+                <Grid className="w-5 h-5" />
+                Launch Doctor Command Center
+              </Button>
             </div>
           </Card>
         </div>

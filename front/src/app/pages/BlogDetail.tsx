@@ -240,12 +240,10 @@ export default function BlogDetail() {
           <p className="text-gray-500 mb-8">
             The blog post you're looking for doesn't exist.
           </p>
-          <Link to="/blogs">
-            <Button size="md">
-              <ArrowLeft className="w-4 h-4" />
-              Back to Blog
-            </Button>
-          </Link>
+          <Button to="/blogs" size="md">
+            <ArrowLeft className="w-4 h-4" />
+            Back to Blog
+          </Button>
         </motion.div>
       </div>
     );

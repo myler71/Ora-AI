@@ -259,12 +259,22 @@ export function AuthDialog({
               />
             </div>
             <Button
-              className="w-full bg-[#3FA9F5] text-white hover:bg-[#1F6FEB]"
+              className="w-full bg-[#3FA9F5] text-white hover:bg-[#1F6FEB] font-bold"
               type="submit"
               disabled={isSubmitting}
             >
-              Login
+              {isSubmitting ? "Signing in..." : "Login"}
             </Button>
+            <button
+              type="button"
+              onClick={() => {
+                setLoginEmail("doctor@ora.ai");
+                setLoginPassword("Password123!");
+              }}
+              className="w-full text-xs font-semibold py-2 px-3 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors cursor-pointer text-center block"
+            >
+              ✨ 1-Click Demo Doctor Fill (doctor@ora.ai)
+            </button>
             <div className="flex items-center justify-between text-sm">
               <button
                 className="text-[#1F6FEB] hover:underline"

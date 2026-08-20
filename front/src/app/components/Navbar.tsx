@@ -100,9 +100,7 @@ export function Navbar() {
             >
               Blogs
             </Link>
-            <Link to="/ai-tool">
-              <Button size="sm">Try AI Scan</Button>
-            </Link>
+            <Button to="/ai-tool" size="sm">Try AI Scan</Button>
             {isLoggedIn && user ? (
               <div className="flex items-center gap-3 ml-2 relative">
                 <button

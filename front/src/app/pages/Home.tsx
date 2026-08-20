@@ -45,18 +45,14 @@ export default function Home() {
                 Upload intraoral photos for instant automated disease classification or launch the doctor command center for full patient workspace management, FDI odontograms, and RAG chat.
               </p>
               <div className="flex flex-wrap gap-4">
-                <Link to="/ai-tool">
-                  <Button size="lg">
-                    <Upload className="w-5 h-5" />
-                    Try Free AI Scan
-                  </Button>
-                </Link>
-                <Link to="/dashboard">
-                  <Button variant="outline" size="lg" className="border-blue-600 text-blue-600 hover:bg-blue-50 font-bold">
-                    <Grid className="w-5 h-5" />
-                    Launch Doctor Command Center
-                  </Button>
-                </Link>
+                <Button to="/ai-tool" size="lg">
+                  <Upload className="w-5 h-5" />
+                  Try Free AI Scan
+                </Button>
+                <Button to="/dashboard" variant="outline" size="lg" className="border-blue-600 text-blue-600 hover:bg-blue-50 font-bold">
+                  <Grid className="w-5 h-5" />
+                  Launch Doctor Command Center
+                </Button>
               </div>
             </div>
 

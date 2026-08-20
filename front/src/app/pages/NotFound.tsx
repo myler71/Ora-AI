@@ -26,17 +26,13 @@ export default function NotFound() {
           </p>
 
           <div className="flex flex-wrap gap-4 justify-center">
-            <Link to="/">
-              <Button size="lg">
-                <Home className="w-5 h-5" />
-                Back to Home
-              </Button>
-            </Link>
-            <Link to="/ai-tool">
-              <Button variant="outline" size="lg">
-                Try AI Scan
-              </Button>
-            </Link>
+            <Button to="/" size="lg">
+              <Home className="w-5 h-5" />
+              Back to Home
+            </Button>
+            <Button to="/ai-tool" variant="outline" size="lg">
+              Try AI Scan
+            </Button>
           </div>
         </div>
       </div>
